@@ -1,0 +1,96 @@
+<div class="container">
+    <br>
+    <div class="row align-items-center mb-4 row-custom">
+      <div class="col-8">
+        <h2 class="fw-bold">
+            @if (editarDatosPaciente) {
+                Editar
+            } @else {
+                Nuevo
+            }
+            Paciente</h2>
+      </div>
+      <div class="col-4 text-end">
+        <button routerLink="/salir" class="btn btn-danger">
+            Salir de sesión
+        </button>
+      </div>
+    </div>
+    @if(form){
+        <form [formGroup]="form" (ngSubmit)="guardar()" class="row g-3" >
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Apellido Paterno</mat-label>
+                    <input matInput type="text" autocomplete="off" name="apellidoPaterno" formControlName="apellidoPaterno"/>
+                    <mat-error >Campo obligatorio</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Apellido Materno</mat-label>
+                    <input matInput type="text" autocomplete="off" name="apellidoMaterno" formControlName="apellidoMaterno"/>
+                    <mat-error >Campo obligatorio</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Nombres</mat-label>
+                    <input matInput type="text" autocomplete="off" name="nombres" formControlName="nombres"/>
+                    <mat-error >Campo obligatorio</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Peso</mat-label>
+                    <input matInput type="number" autocomplete="off" name="peso" formControlName="peso" (input)="actualizarIMC()"/>
+                    <mat-error >Campo obligatorio</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Talla</mat-label>
+                    <input matInput type="number" autocomplete="off" name="talla" formControlName="talla" (input)="actualizarIMC()"/>
+                    <mat-error >Campo obligatorio</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>IMC</mat-label>
+                    <input matInput type="number" autocomplete="off" name="imc" formControlName="imc" readonly/>
+                    <mat-error >Campo obligatorio</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>DNI</mat-label>
+                    <input matInput type="text" autocomplete="off" name="dni" formControlName="dni" maxlength="8"/>
+                    <mat-error >Campo obligatorio</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Especialidades</mat-label>
+                    <mat-select [formControlName]="'idEspecialidad'">
+                      @for (topping of listaEspecialidades; track topping) {
+                          <mat-option [value]="topping.id">{{ topping.nombre }}</mat-option>
+                      }
+                    </mat-select>
+                    <mat-error >Campo obligatorio</mat-error>
+                  </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-success" style="margin-top: 0%;">
+                    @if (editarDatosPaciente) {
+                        Actualizar
+                    } @else {
+                        Registrar 
+                    }
+                    Paciente
+                </button>&nbsp;&nbsp;
+                <button type="button" routerLink="/inicio" class="btn btn-warning">
+                    Regresar
+                  </button>
+            </div>
+        </form>
+    }
+</div>
