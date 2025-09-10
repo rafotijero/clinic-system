@@ -1,17 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { LoginInput, LoginOutput } from '../model/usuario.interface';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  private baseUrl = 'http://localhost:8080/api/usuario';
   private http = inject(HttpClient);
+  private api = inject(ApiService)
 
-  constructor() { }
-
-  login(credenciales: { usuario: string; clave: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, credenciales);
+  login(credenciales: LoginInput) {
+    return this.http.post<LoginOutput>(this.api.getApiUrl('auth/login'), credenciales);
   }
 }

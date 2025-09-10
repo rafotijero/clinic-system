@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-9"></div>
       <div class="col-3">
-        Bienvenido(a): {{decodedToken.sub}} -
-        <strong>{{decodedToken.role}}</strong>
+        Bienvenido(a): {{userName}} -
+        <strong>{{userRole}}</strong>
       </div>
     </div>
     <div class="row align-items-center mb-4 row-custom">
@@ -12,7 +12,7 @@
         <h2 class="fw-bold">Listado de Pacientes</h2>
       </div>
       <div class="col-4 text-end">
-          @if (decodedToken.role!="ASISTENTE") {
+          @if (isNotAssistant()) {
             <button routerLink="/registrar" class="btn btn-primary m-e-3">
               Nuevo Paciente
             </button>&nbsp;&nbsp;
@@ -69,14 +69,14 @@
                     <th mat-header-cell *matHeaderCellDef> Especialidad </th>
                     <td mat-cell *matCellDef="let element"> {{element.especialidad.nombre}} </td>
                   </ng-container>
-                  @if (decodedToken.role!="ASISTENTE") {                  
+                  @if (isNotAssistant()) {                  
                     <ng-container matColumnDef="acciones">
                         <th mat-header-cell *matHeaderCellDef> Acciones </th>
                         <td mat-cell *matCellDef="let element">
                           <button mat-icon-button matTooltip="Editar paciente" [routerLink]="['/editar/', element.id]" style="vertical-align: middle;">
                             <mat-icon>edit</mat-icon>
                           </button>
-                          @if (decodedToken.role=="ADMIN") {
+                          @if (isAdmin()) {
                             <button mat-icon-button matTooltip="Eliminar paciente" (click)="eliminar(element.id)" style="vertical-align: middle;">
                               <mat-icon>delete</mat-icon>
                             </button>

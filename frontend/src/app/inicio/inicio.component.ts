@@ -1,16 +1,15 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
-import { ConfirmarDialogComponent } from '../confirmar-dialog/confirmar-dialog.component';
 import { Paciente } from '../model/paciente.interface';
 import { PacienteService } from '../services/paciente.service';
-import { JwtDecoderService } from '../services/jwt-decoder.service';
+import { UiService } from '../services/ui.service';
+import { RoleService } from '../services/role.service';
+import { UserService } from '../services/user.service';
 
 @Component({
     selector: 'app-inicio',
@@ -20,20 +19,20 @@ import { JwtDecoderService } from '../services/jwt-decoder.service';
 })
 export default class InicioComponent implements OnInit{
   private pacienteService = inject(PacienteService);
-  private dialog = inject(MatDialog);
-  private snackBar = inject(MatSnackBar);
-  private jwtDecoder = inject(JwtDecoderService)
-  horizontalPosition: MatSnackBarHorizontalPosition = 'right';
-  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  private uiService = inject(UiService);
+  private roleService = inject(RoleService);
+  private userService = inject(UserService);
   dataSource:any;
   displayedColumns: string[] = ['id', 'apellidoPaterno', 'apellidoMaterno', 'nombres', 'dni', 'peso', 'talla', 'imc', 'especialidad', 'acciones'];
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatTable,{static:true}) table!: MatTable<any>;
-  decodedToken:any
+  userName: string = '';
+  userRole: string = '';
   
   ngOnInit(): void {
-    this.decodedToken = this.jwtDecoder.decodeToken()
-    if(this.decodedToken.role=="ASISTENTE"){
+    this.userName = this.userService.getName();
+    this.userRole = this.userService.getRole();
+    if(this.roleService.isAssistant()){
       this.displayedColumns = ['id', 'apellidoPaterno', 'apellidoMaterno', 'nombres', 'dni', 'peso', 'talla', 'imc', 'especialidad'];
     }
     this.listar();
@@ -49,14 +48,13 @@ export default class InicioComponent implements OnInit{
   }
 
   eliminar(idPaciente: number): void {
-    const dialogRef = this.dialog.open(ConfirmarDialogComponent);
-    dialogRef.afterClosed().subscribe((result) => {
+    this.uiService.showConfirmationDialog().subscribe((result) => {
       if (result) {
         this.pacienteService.eliminar(idPaciente).subscribe(
           (paciente)=>{
             if(paciente!=undefined){
               this.listar();
-              this.openSnackBarEliminar();
+              this.uiService.showSnackBar('Eliminado con éxito!');
             }
           }
         )
@@ -64,11 +62,11 @@ export default class InicioComponent implements OnInit{
     });
   }
 
-  openSnackBarEliminar() {
-    this.snackBar.open('Eliminado con éxito!', 'OK', {
-      horizontalPosition: this.horizontalPosition,
-      verticalPosition: this.verticalPosition,
-      duration:4000
-    });
+  isNotAssistant(): boolean {
+    return !this.userService.isAssistant();
+  }
+
+  isAdmin(): boolean {
+    return this.userService.isAdmin();
   }
 }

@@ -1,20 +1,13 @@
 import { inject, Injectable } from '@angular/core';
-import { JwtDecoderService } from './jwt-decoder.service';
+import { RoleService } from './role.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private jwtDecoder = inject(JwtDecoderService)
-  decodedToken:any
-  constructor() { }
+  private roleService = inject(RoleService);
 
-  isAuth(){
-    this.decodedToken = this.jwtDecoder.decodeToken();
-    if(this.decodedToken.role=="ASISTENTE"){
-      return false;
-    }else{
-      return true;
-    }
+  isAuth(): boolean {
+    return !this.roleService.isAssistant();
   }
 }

@@ -5,16 +5,14 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import {
-  MatSnackBar,
-  MatSnackBarHorizontalPosition,
-  MatSnackBarVerticalPosition,
-} from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Especialidad } from '../model/especialidad.interface';
 import { Paciente } from '../model/paciente.interface';
 import { EspecialidadService } from '../services/especialidad.service';
 import { PacienteService } from '../services/paciente.service';
+import { UiService } from '../services/ui.service';
+import { ImcService } from '../services/imc.service';
+
 @Component({
     selector: 'app-formulario-paciente',
     imports: [RouterLink, ReactiveFormsModule, MatInputModule, MatButtonModule, FormsModule, MatGridListModule, MatSelectModule, MatIconModule],
@@ -27,16 +25,15 @@ export default class FormularioPacienteComponent implements OnInit{
   private especialidadService = inject(EspecialidadService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private snackBar = inject(MatSnackBar);
-  horizontalPosition: MatSnackBarHorizontalPosition = 'right';
-  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  private uiService = inject(UiService);
+  private imcService = inject(ImcService);
   listaEspecialidades: Especialidad[]=[]
   form?: FormGroup;
   editarDatosPaciente?:Paciente;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')  
-    if(id!=null){//si existe valores, esto es para editar
+    if(id!=null){
       this.pacienteService.obtener(parseInt(id)).subscribe(res =>{
         this. editarDatosPaciente = res;
         this.form = this.fb.group({
@@ -51,7 +48,7 @@ export default class FormularioPacienteComponent implements OnInit{
         })
         }
       )
-    }else{//no existe valores previos, esto es para crear
+    }else{
       this.form = this.fb.group({
         apellidoPaterno:['',[Validators.required]],
         apellidoMaterno:['',[Validators.required]],
@@ -64,7 +61,6 @@ export default class FormularioPacienteComponent implements OnInit{
       })
     }
     
-    //Traer todos los valores del listado de especialidades para pintar en el combo de selección
     this.especialidadService.listar().subscribe(
       (lista)=>{
         this.listaEspecialidades = lista
@@ -72,25 +68,17 @@ export default class FormularioPacienteComponent implements OnInit{
     )
   }
 
-  calcularIMC(peso: number, talla: number): number {
-    if (talla === 0) {
-      throw new Error('La talla no puede ser cero');
-    }
-    const imc = peso / Math.pow(talla, 2);
-    return parseFloat(imc.toFixed(2));
-  }
-
   actualizarIMC(): void {
     let peso = parseFloat(this.form!.get('peso')?.value);
     let talla = parseFloat(this.form!.get('talla')?.value);
-    let imc = this.calcularIMC(peso, talla);
+    let imc = this.imcService.calcularIMC(peso, talla);
     if(!isNaN(imc)){
       this.form!.get('imc')?.setValue(imc)
     }    
   }
 
   guardar(){
-    if (this.form!.invalid) {//validar todos los campos del formulario como obligatorios
+    if (this.form!.invalid) {
       return;
     }
 
@@ -101,34 +89,17 @@ export default class FormularioPacienteComponent implements OnInit{
       .subscribe(
         ()=>{
           this.router.navigate(['/inicio']);
+          this.uiService.showSnackBar('Actualizado con éxito!');
         }
       )
-      this.openSnackBarActualizar();
-
     }else{
       this.pacienteService.registrar(pacienteFormulario)
       .subscribe(
         ()=>{
           this.router.navigate(['/inicio']);
+          this.uiService.showSnackBar('Registrado con éxito!');
         }
       )
-      this.openSnackBarCrear();
     }
-  }
-
-  openSnackBarCrear() {
-    this.snackBar.open('Registrado con éxito!', 'OK', {
-      horizontalPosition: this.horizontalPosition,
-      verticalPosition: this.verticalPosition,
-      duration:4000
-    });
-  }
-
-  openSnackBarActualizar() {
-    this.snackBar.open('Actualizado con éxito!', 'OK', {
-      horizontalPosition: this.horizontalPosition,
-      verticalPosition: this.verticalPosition,
-      duration:4000
-    });
   }
 }

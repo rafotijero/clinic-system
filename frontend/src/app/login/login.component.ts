@@ -1,4 +1,3 @@
-import {} from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +8,7 @@ import { LoginService } from '../services/login.service';
 import { LoginOutput } from '../model/usuario.interface';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { UiService } from '../services/ui.service';
 
 @Component({
     selector: 'app-login',
@@ -28,9 +27,7 @@ export default class LoginComponent {
   credenciales = { usuario: '', clave: '' };
   private loginService = inject(LoginService);
   private router = inject(Router);
-  private snackBar = inject(MatSnackBar);
-  horizontalPosition: MatSnackBarHorizontalPosition = 'right';
-  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  private uiService = inject(UiService);
 
   onSubmit(){
     this.loginService.login(this.credenciales).subscribe({
@@ -39,20 +36,12 @@ export default class LoginComponent {
           sessionStorage.setItem("token", response.token);
           this.router.navigate(['/inicio']);
         }else{
-          this.openSnackBarLoginIncorrecto(response.respuesta);
+          this.uiService.showSnackBar(response.respuesta);
         }
       },
       error:(err)=>{
         console.error('Login failed', err);
       }
     })
-  }
-
-  openSnackBarLoginIncorrecto(mensaje:string) {
-    this.snackBar.open(mensaje, 'OK', {
-      horizontalPosition: this.horizontalPosition,
-      verticalPosition: this.verticalPosition,
-      duration:4000
-    });
   }
 }
