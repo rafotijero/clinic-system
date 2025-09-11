@@ -11,6 +11,6 @@ export class LoginService {
   private api = inject(ApiService)
 
   login(credenciales: LoginInput) {
-    return this.http.post<LoginOutput>(this.api.getApiUrl('auth/login'), credenciales);
+    return this.http.post<LoginOutput>(this.api.getApiUrl('usuario/login'), credenciales);
   }
 }
