@@ -25,6 +25,11 @@ public class SecurityConfig {
     	httpSecurity.csrf(csrf->csrf.disable())
     		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
     		.authorizeHttpRequests(http->{
+                http.requestMatchers("/swagger-ui/**").permitAll();
+                http.requestMatchers("/swagger-ui.html").permitAll();
+                http.requestMatchers("/api-docs/**").permitAll();
+                http.requestMatchers("/v3/api-docs/**").permitAll();
+
                 http.requestMatchers("/api/usuario/login").permitAll();
                 http.requestMatchers("/api/paciente/listar").hasAnyRole("ADMIN", "MEDICO", "ASISTENTE");
                 http.requestMatchers("/api/especialidad/listar").hasAnyRole("ADMIN", "MEDICO");
