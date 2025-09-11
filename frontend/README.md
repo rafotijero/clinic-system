@@ -1,27 +1,99 @@
 # FrontClinica
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 20.2.2.
+Este proyecto fue generado con [Angular CLI](https://github.com/angular/angular-cli) versión 20.2.2.
 
-## Development server
+## Descripción
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+FrontClinica es la interfaz de usuario para un sistema de gestión de clínicas. Permite a los usuarios interactuar con el sistema para gestionar pacientes, citas y otros aspectos de la clínica.
 
-## Code scaffolding
+## Requisitos Previos
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Asegúrate de tener instaladas las siguientes herramientas:
 
-## Build
+*   [Node.js](https://nodejs.org/) (que incluye npm)
+*   [Angular CLI](https://cli.angular.io/)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Instalación
 
-## Running unit tests
+1.  Clona el repositorio:
+    ```sh
+    git clone <URL_DEL_REPOSITORIO>
+    ```
+2.  Navega al directorio del frontend:
+    ```sh
+    cd frontend
+    ```
+3.  Instala las dependencias del proyecto:
+    ```sh
+    npm install
+    ```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Servidor de Desarrollo
 
-## Running end-to-end tests
+Ejecuta `ng serve` para iniciar el servidor de desarrollo. Navega a `http://localhost:4200/`. La aplicación se recargará automáticamente si cambias alguno de los archivos de origen.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Compilación
 
-## Further help
+Ejecuta `ng build` para compilar el proyecto. Los artefactos de la compilación se almacenarán en el directorio `dist/`.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Estructura del Proyecto
+
+La estructura del código fuente del frontend es la siguiente:
+
+```
+src/
+├── app/
+│   ├── components/         # Componentes reutilizables
+│   ├── guards/             # Guardianes de rutas
+│   ├── models/             # Interfaces y modelos de datos
+│   ├── services/           # Servicios de la aplicación
+│   ├── app.component.css
+│   ├── app.component.html
+│   ├── app.component.ts
+│   ├── app.config.ts
+│   └── app.routes.ts       # Definición de rutas
+├── assets/                 # Archivos estáticos (imágenes, fuentes)
+├── environments/           # Configuración de entornos
+├── index.html              # Página principal
+├── main.ts                 # Punto de entrada de la aplicación
+└── styles.css              # Estilos globales
+```
+
+### Rutas Principales
+
+Las rutas de la aplicación están definidas en `app.routes.ts`:
+
+*   `/`: Pantalla de inicio de sesión.
+*   `/salir`: Cierra la sesión del usuario.
+*   `/inicio`: Página principal después de iniciar sesión.
+*   `/registrar`: Formulario para registrar un nuevo paciente (protegido por guardia de autenticación).
+*   `/editar/:id`: Formulario para editar un paciente existente (protegido por guardia de autenticación).
+
+### Servicios
+
+Los servicios principales de la aplicación se encuentran en la carpeta `src/app/services`:
+
+*   **`api.service.ts`**: Gestiona las URL de la API.
+*   **`auth.service.ts`**: Lógica de autenticación.
+*   **`especialidad.service.ts`**: Gestiona los datos de las especialidades.
+*   **`imc.service.ts`**: Lógica para calcular el IMC.
+*   **`jwt-decoder.service.ts`**: Decodifica los tokens JWT.
+*   **`login.service.ts`**: Gestiona el inicio de sesión.
+*   **`paciente.service.ts`**: Gestiona los datos de los pacientes.
+*   **`role.service.ts`**: Gestiona los roles de usuario.
+*   **`ui.service.ts`**: Servicios relacionados con la interfaz de usuario.
+*   **`user.service.ts`**: Gestiona los datos de los usuarios.
+
+### Componentes
+
+Los componentes principales de la aplicación son:
+
+*   **`login`**: Componente para el inicio de sesión.
+*   **`logout`**: Componente para cerrar sesión.
+*   **`inicio`**: Componente de la página de inicio.
+*   **`formulario-paciente`**: Componente para crear y editar pacientes.
+*   **`confirmar-dialog`**: Componente de diálogo de confirmación.
+
+## Ayuda Adicional
+
+Para obtener más ayuda sobre Angular CLI, usa `ng help` o consulta la [Referencia de Comandos de Angular CLI](https://angular.io/cli).
