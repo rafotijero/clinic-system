@@ -1,5 +1,7 @@
 package com.clinica.application.dto;
 
+import com.clinica.infrastructure.persistence.entity.Especialidad;
+
 public record PacienteResponseDTO(
         Long id,
         String apellidoPaterno,
@@ -10,5 +12,5 @@ public record PacienteResponseDTO(
         Float talla,
         Float imc,
         Integer estado,
-        String especialidadNombre
+        Especialidad especialidad
 ) {}

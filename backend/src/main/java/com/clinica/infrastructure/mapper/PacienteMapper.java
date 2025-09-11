@@ -18,7 +18,7 @@ public class PacienteMapper {
                 paciente.getTalla(),
                 paciente.getImc(),
                 paciente.getEstado(),
-                paciente.getEspecialidad() != null ? paciente.getEspecialidad().getNombre() : null
+                paciente.getEspecialidad() != null ? paciente.getEspecialidad() : null
         );
     }
 }
